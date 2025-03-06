@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 import asyncio
 load_dotenv()
 
-RobloxCookie = os.environ.get("COOKIE")
-APIKEY = os.environ.get("API_KEY")
+#RobloxCookie = os.getenv("COOKIE")
+#APIKEY = os.getenv("API_KEY")
 
 
 client = Client(RobloxCookie)
@@ -38,3 +38,22 @@ async def read_items(user_name: str, key: str, groupid: int):
      return ("The user was demoted!")
     else:
         return "Incorrect key"
+
+@app.get("/group/rank/")
+async def read_items(user_name: str, key: str, groupid: int, role_number: int):
+    if key == APIKEY:
+     group = await client.get_group(groupid)
+     target = await group.get_member_by_username(user_name)
+     await target.setrole(role_number)
+     return ("The user had their ranked changed")
+    else:
+        return "Incorrect key"
+
+@app.get("/group/members/")
+async def read_items(key: str, groupid: int):
+    if key == APIKEY:
+     group = await client.get_group(groupid)
+     return (group.member_count)
+    else:
+        return "Incorrect key"
+
